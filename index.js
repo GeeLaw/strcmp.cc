@@ -382,6 +382,7 @@ function printResult(type)
     var newBody = document.createElement("body");
     newBody.appendChild(resultTable);
     document.body = newBody;
+    window.print();
 }
 
 function email()
