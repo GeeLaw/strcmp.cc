@@ -138,7 +138,7 @@ function runDP(dp, lines1, lines2)
 
 function doCompare(str1, str2)
 {
-    const newlineRegex = /\r|\n|\r\n/g;
+    const newlineRegex = /\r\n|\n|\r/g;
     var lines1 = str1.split(newlineRegex);
     var lines2 = str2.split(newlineRegex);
     var dp = new Array();
