@@ -388,7 +388,7 @@ function printResult(type)
 function email()
 {
     window.location.href = "mailto:"
-        +  rsa(document.getElementById("email-me").getAttribute("data-rsa")
+        +  rsa(document.getElementById("email-me").getAttribute("data-gl-rsa")
             .split('|').map(function (x) { return Number(x); }), 883, 272123)
             .map(function (x) { return String.fromCharCode(x); }).join('');
 }
