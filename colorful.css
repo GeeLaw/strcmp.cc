@@ -1,0 +1,91 @@
+.gl-strcmp-insert-content
+{
+    padding-left: 4px;
+    background: #ecffec;
+}
+.gl-strcmp-insert-line-number
+{
+    text-align: right;
+    padding-right: 4px;
+    background: #ecffec;
+}
+.gl-strcmp-insert-border
+{
+    background: #ccefcc;
+}
+.gl-strcmp-remove-content
+{
+    padding-left: 4px;
+    background: #ffecec;
+}
+.gl-strcmp-remove-line-number
+{
+    text-align: right;
+    padding-right: 4px;
+    background: #ffecec;
+}
+.gl-strcmp-remove-border
+{
+    background: #efcccc;
+}
+.gl-strcmp-lack-content
+{
+    padding-left: 4px;
+    background: #fafafa;
+}
+.gl-strcmp-lack-line-number
+{
+    text-align: right;
+    padding-right: 4px;
+    background: #fafafa;
+}
+.gl-strcmp-lack-border
+{
+    background: #eaeaea;
+}
+.gl-strcmp-same-content
+{
+    padding-left: 4px;
+    background: white;
+}
+.gl-strcmp-same-line-number
+{
+    text-align: right;
+    padding-right: 4px;
+    background: white;
+}
+.gl-strcmp-same-border
+{
+    background: #eaeaea;
+}
+.gl-strcmp-ellipsis-content
+{
+    text-align: center;
+    font-weight: bold;
+    background: #edf2f9;
+}
+.gl-strcmp-ellipsis-line-number
+{
+    text-align: right;
+    padding-right: 4px;
+    background: #edf2f9;
+}
+.gl-strcmp-ellipsis-border
+{
+    background: #d2dff0;
+}
+.gl-strcmp-eof-content
+{
+    padding-left: 4px;
+    background: #edf2f9;
+}
+.gl-strcmp-eof-line-number
+{
+    text-align: right;
+    padding-right: 4px;
+    background: #edf2f9;
+}
+.gl-strcmp-eof-border
+{
+    background: #d2dff0;
+}

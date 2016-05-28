@@ -1,0 +1,32 @@
+.gl-cell-border
+{
+    width: 1px;
+    min-width: 1px;
+    max-width: 1px;
+    box-sizing: content-box;
+}
+.gl-cell-line-number
+{
+    width: 40px;
+    width: calc(1vw + 28px);
+}
+.gl-cell-content
+{
+    width: auto;
+}
+.gl-hidden
+{
+    display: none;
+}
+.gl-link
+{
+    text-decoration: none;
+}
+a.gl-link:link, a.gl-link:visited
+{
+    color: black;
+}
+a.gl-link:hover
+{
+    color: #555;
+}

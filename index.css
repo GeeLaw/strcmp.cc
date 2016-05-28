@@ -1,0 +1,165 @@
+table, tbody, tr, td
+{
+    border-style: none;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    padding: 1px;
+}
+table
+{
+    table-layout: fixed;
+}
+td
+{
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+}
+body
+{
+    color: black;
+    background: white;
+    font-family: Consolas, Menlo, Microsoft YaHei, PingFang SC, PingFang TC, monospace;
+    align-content: center;
+}
+
+.gl-picker-frame
+{
+    width: 100%;
+    max-width: 240px;
+    text-align: left;
+}
+
+.gl-wide-result-table
+{
+    width: 100%;
+}
+.gl-narrow-result-table
+{
+    width: 100%;
+}
+@media screen and (max-width: 1080px)
+{
+    .gl-wide-result-table
+    {
+        display: none;
+    }
+    .gl-print-button-wide
+    {
+        display: none;
+    }
+}
+@media screen and (min-width: 1081px)
+{
+    .gl-narrow-result-table
+    {
+        display: none;
+    }
+    .gl-print-button-narrow
+    {
+        display: none;
+    }
+}
+
+.gl-wide-result-table-print
+{
+    width: 100%;
+}
+.gl-narrow-result-table-print
+{
+    width: 100%;
+}
+
+.gl-button
+{
+    text-decoration: none;
+}
+a.gl-button:link, a.gl-button:visited
+{
+    color: #08C;
+}
+
+.gl-reset-button-right
+{
+    text-decoration: none;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #08C;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    background: white;
+}
+a.gl-reset-button-right:link, a.gl-reset-button-right:visited
+{
+    color: #08C;
+}
+
+.gl-reset-button-left
+{
+    text-decoration: none;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #08C;
+    position: fixed;
+    top: 22px;
+    left: 200px;
+    padding: 10px;
+    background: white;
+}
+a.gl-reset-button-left:link, a.gl-reset-button-left:visited
+{
+    color: #08C;
+}
+
+.gl-compare-button
+{
+    text-decoration: none;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #08C;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: white;
+}
+a.gl-compare-button, a.gl-compare-button:visited
+{
+    color: #08C;
+}
+
+.gl-print-button-wide
+{
+    text-decoration: none;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #08C;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    background: white;
+}
+a.gl-print-button-wide:link, a.gl-reset-button-wide:visited
+{
+    color: #08C;
+}
+
+.gl-print-button-narrow
+{
+    text-decoration: none;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #08C;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    background: white;
+}
+a.gl-print-button-narrow:link, a.gl-reset-button-narrow:visited
+{
+    color: #08C;
+}

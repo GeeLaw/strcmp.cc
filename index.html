@@ -1,509 +1,42 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>strcmp</title>
-        <style>
-            table, tbody, tr, td
-            {
-                border-style: none;
-                border-collapse: collapse;
-                border-spacing: 0px;
-                padding: 1px;
-            }
-            table
-            {
-                table-layout: fixed;
-            }
-            td
-            {
-                text-overflow: ellipsis;
-                white-space:nowrap;
-                overflow:hidden;
-            }
-            .gl-cell-border
-            {
-                width: 1px;
-                min-width: 1px;
-                max-width: 1px;
-                box-sizing: content-box;
-            }
-            .gl-cell-line-number
-            {
-                width: 40px;
-                width: calc(1vw + 28px);
-            }
-            .gl-cell-content
-            {
-                width: auto;
-            }
-            .gl-strcmp-insert-content
-            {
-                padding-left: 4px;
-                background: #ecffec;
-            }
-            .gl-strcmp-insert-line-number
-            {
-                text-align: right;
-                padding-right: 4px;
-                background: #ecffec;
-            }
-            .gl-strcmp-insert-border
-            {
-                background: #ccefcc;
-            }
-            .gl-strcmp-remove-content
-            {
-                padding-left: 4px;
-                background: #ffecec;
-            }
-            .gl-strcmp-remove-line-number
-            {
-                text-align: right;
-                padding-right: 4px;
-                background: #ffecec;
-            }
-            .gl-strcmp-remove-border
-            {
-                background: #efcccc;
-            }
-            .gl-strcmp-lack-content
-            {
-                padding-left: 4px;
-                background: #fafafa;
-            }
-            .gl-strcmp-lack-line-number
-            {
-                text-align: right;
-                padding-right: 4px;
-                background: #fafafa;
-            }
-            .gl-strcmp-lack-border
-            {
-                background: #eaeaea;
-            }
-            .gl-strcmp-same-content
-            {
-                padding-left: 4px;
-                background: white;
-            }
-            .gl-strcmp-same-line-number
-            {
-                text-align: right;
-                padding-right: 4px;
-                background: white;
-            }
-            .gl-strcmp-same-border
-            {
-                background: #eaeaea;
-            }
-            .gl-strcmp-ellipsis-content
-            {
-                text-align: center;
-                font-weight: bold;
-                background: #edf2f9;
-            }
-            .gl-strcmp-ellipsis-line-number
-            {
-                text-align: right;
-                padding-right: 4px;
-                background: #edf2f9;
-            }
-            .gl-strcmp-ellipsis-border
-            {
-                background: #d2dff0;
-            }
-            .gl-strcmp-eof-content
-            {
-                padding-left: 4px;
-                background: #edf2f9;
-            }
-            .gl-strcmp-eof-line-number
-            {
-                text-align: right;
-                padding-right: 4px;
-                background: #edf2f9;
-            }
-            .gl-strcmp-eof-border
-            {
-                background: #d2dff0;
-            }
-            .gl-hidden
-            {
-                display: none;
-            }
-            body
-            {
-                color: black;
-                background: white;
-                font-family: Consolas, Menlo, Microsoft YaHei, PingFang SC, PingFang TC, monospace;
-                align-content: center;
-            }
-            .gl-picker-frame
-            {
-                width: 100%;
-                max-width: 480px;
-                text-align: center;
-            }
-            .gl-button
-            {
-                text-decoration: none;
-            }
-            a.gl-button, a.gl-button:visited
-            {
-                color: #08C;
-            }
-            .gl-reset-button
-            {
-                text-decoration: none;
-                border-style: solid;
-                border-width: 2px;
-                border-color: #08C;
-                position: fixed;
-                top: 10px;
-                right: 10px;
-                padding: 10px;
-                background: white;
-            }
-            a.gl-reset-button, a.gl-reset-button:visited
-            {
-                color: #08C;
-            }
-            .gl-compare-button
-            {
-                text-decoration: none;
-                border-style: solid;
-                border-width: 2px;
-                border-color: #08C;
-                padding-left: 20px;
-                padding-right: 20px;
-                padding-top: 10px;
-                padding-bottom: 10px;
-                background: white;
-            }
-            a.gl-compare-button, a.gl-compare-button:visited
-            {
-                color: #08C;
-            }
-        </style>
-        <script>
-            if (!Array.prototype.fill)
-            {
-                Object.defineProperty(Array.prototype, "fill",
-                {
-                    configurable: false,
-                    writable: false,
-                    enumerable: false,
-                    value: function (val, start, end)
-                    {
-                        if (this == null || this == undefined)
-                            return this;
-                        if (!(this.length instanceof Number || typeof this.length == "number"))
-                            return this;
-                        if (!(start instanceof Number || typeof start == "number"))
-                            start = 0;
-                        start = start >>> 0;
-                        if (!(end instanceof Number || typeof end == "number"))
-                            end = this.length;
-                        end = end >>> 0;
-                        for (var i = start; i < end; ++i)
-                            this[i] = val;
-                        return this;
-                    }
-                });
-            }
-            
-            function gotoState(state)
-            {
-                rows = new Array();
-                var pickersView = document.getElementById("pickers-view");
-                var busyView = document.getElementById("busy-view");
-                var resultView = document.getElementById("result-view");
-                var resetButton = document.getElementById("reset-button");
-                pickersView.className = "gl-hidden";
-                busyView.className = "gl-hidden";
-                resultView.className = "gl-hidden";
-                switch (state)
-                {
-                    case "pickers":
-                    {
-                        pickersView.className = "";
-                        break;
-                    }
-                    case "busy":
-                    {
-                        busyView.className = "";
-                        break;
-                    }
-                    case "result":
-                    {
-                        resultView.className = "";
-                        resetButton.className = "";
-                        break;
-                    }
-                    default:
-                    {
-                        break;
-                    }
-                }
-            }
-            function pickerChanged()
-            {
-                var picker1 = document.getElementById("file1");
-                var picker2 = document.getElementById("file2");
-                var compareButton = document.getElementById("compare-button");
-                var resetButton = document.getElementById("reset-button");
-                compareButton.className = (picker1.value && picker2.value ? "" : "gl-hidden");
-                resetButton.className = (picker1.value || picker2.value ? "" : "gl-hidden");
-                var picker1text = document.getElementById("file1-name");
-                var picker2text = document.getElementById("file2-name");
-                var picker1header = document.getElementById("file1-name-header");
-                var picker2header = document.getElementById("file2-name-header");
-                picker1text.innerText = (picker1.value ? picker1.files[0].name : "");
-                if (picker1.value)
-                    picker1header.innerText = picker1.files[0].name;
-                picker2text.innerText = (picker2.value ? picker2.files[0].name : "");
-                if (picker2.value)
-                    picker2header.innerText = picker2.files[0].name;
-            }
-            function resetPickers()
-            {
-                var picker1 = document.getElementById("file1");
-                var picker2 = document.getElementById("file2");
-                picker1.value = null;
-                picker2.value = null;
-                pickerChanged();
-            }
-            function invokePicker(pickerName)
-            {
-                var picker = document.getElementById(pickerName);
-                picker.click();
-            }
-            function compareClick()
-            {
-                gotoState("busy");
-                var picker1 = document.getElementById("file1");
-                var picker2 = document.getElementById("file2");
-                var file1 = picker1.files[0];
-                var file2 = picker2.files[0];
-                resetPickers();
-                var reader1 = new FileReader();
-                var reader2 = new FileReader();
-                var result1 = null, result2 = null;
-                reader1.onload = function (e)
-                {
-                    result1 = e.target.result;
-                    if (result1 != null && result2 != null)
-                        doCompare(result1, result2);
-                };
-                reader2.onload = function (e)
-                {
-                    result2 = e.target.result;
-                    if (result1 != null && result2 != null)
-                        doCompare(result1, result2);
-                };
-                reader1.onerror = reader2.onerror = function ()
-                {
-                    alert("Cannot read file.");
-                    gotoState("pickers");
-                };
-                reader1.readAsText(file1);
-                reader2.readAsText(file2);
-            }
-            
-            function animateCall(func)
-            {
-                // Prevent blocking the UI thread.
-                // The name comes from the original usage: animation.
-                window.setTimeout(func, 0);
-            }
-            
-            function runDP(dp, lines1, lines2)
-            {
-                dp.push(new Array(lines2.length + 1));
-                dp[0][0] = { value: 0, src: null };
-                for (var j = 1; j <= lines2.length; ++j)
-                    dp[0][j] = { value: 0, src: { i: 0, j: j - 1 } };
-                for (var i = 1; i <= lines1.length; ++i)
-                {
-                    dp.push(new Array(lines2.length + 1));
-                    dp[i][0] = { value: 0, src: { i: i - 1, j: 0 } };
-                    for (var j = 1; j <= lines2.length; ++j)
-                    {
-                        dp[i][j] = { value: dp[i][j - 1].value, src: { i: i, j: j - 1 } };
-                        if (dp[i][j].value < dp[i - 1][j].value)
-                        {
-                            dp[i][j].value = dp[i - 1][j].value;
-                            dp[i][j].src.i = i - 1;
-                            dp[i][j].src.j = j;
-                        }
-                        if (lines1[i - 1] == lines2[j - 1]
-                            && dp[i][j].value <= dp[i - 1][j - 1].value)
-                        {
-                            dp[i][j].value = dp[i - 1][j - 1].value + 1;
-                            dp[i][j].src.i = i - 1;
-                            dp[i][j].src.j = j - 1;
-                        }
-                    }
-                }
-            }
-            
-            function doCompare(str1, str2)
-            {
-                const newlineRegex = /\r|\n|\r\n/g;
-                var lines1 = str1.split(newlineRegex);
-                var lines2 = str2.split(newlineRegex);
-                var dp = new Array();
-                runDP(dp, lines1, lines2);
-                
-                var result = document.getElementById("result");
-                while (result.childElementCount > 8)
-                    result.removeChild(result.lastChild);
-                
-                gotoState("result");
-                
-                var resultStrcmp0 = document.getElementById("result-strcmp-0");
-                resultStrcmp0.className = "gl-hidden";
-                result.className = "";
-                if (lines1.length == lines2.length && dp[lines1.length][lines2.length].value == lines1.length)
-                {
-                    resultStrcmp0.className = "";
-                    result.className = "gl-hidden";
-                    return;
-                }
-                
-                rows = new Array();
-                renderResult(result, dp, lines1, lines2, lines1.length, lines2.length, 0);
-                
-                var renderer;
-                animateCall(renderer = function ()
-                {
-                    if (rows.length == 0)
-                        return;
-                    for (var i = Math.min(100, rows.length); i > 0; --i)
-                    {
-                        var x = rows.pop();
-                        result.appendChild(x);
-                    }
-                    animateCall(renderer);
-                });
-            }
-            
-            var renderThreshold = 3;
-            var rows;
-            
-            function insertRow(c1, c2, c3, c4, class1, class2)
-            {
-                var newRow = document.createElement("tr");
-                var border1 = document.createElement("td");
-                var col1 = document.createElement("td");
-                var border2 = document.createElement("td");
-                var col2 = document.createElement("td");
-                var border3 = document.createElement("td");
-                var col3 = document.createElement("td");
-                var border4 = document.createElement("td");
-                var col4 = document.createElement("td");
-                col1.innerText = c1;
-                col2.innerText = c2;
-                col1.className = class1 + "-line-number";
-                col2.className = class1 + "-content";
-                border1.className = class1 + "-border";
-                border2.className = class1 + "-border";
-                col3.innerText = c3;
-                col4.innerText = c4;
-                col3.className = class2 + "-line-number";
-                col4.className = class2 + "-content";
-                border3.className = class2 + "-border";
-                border4.className = class2 + "-border";
-                newRow.appendChild(border1);
-                newRow.appendChild(col1);
-                newRow.appendChild(border2);
-                newRow.appendChild(col2);
-                newRow.appendChild(border3);
-                newRow.appendChild(col3);
-                newRow.appendChild(border4);
-                newRow.appendChild(col4);
-                rows.push(newRow);
-            }
-            
-            function renderResult(resultTable, dp, lines1, lines2, i, j, renderDowncount)
-            {
-                while (true)
-                {
-                    if (renderDowncount == 0)
-                    {
-                        var consecutiveSame = 0;
-                        var ii = i, jj = j;
-                        while (dp[ii][jj].src != null
-                            && dp[ii][jj].src.i == ii - 1
-                            && dp[ii][jj].src.j == jj - 1)
-                        {
-                            --ii;
-                            --jj;
-                            ++consecutiveSame;
-                        }
-                        if (consecutiveSame >= renderThreshold)
-                        {
-                            i = ii + renderThreshold;
-                            j = jj + renderThreshold;
-                            insertRow("", "...", "", "...", "gl-strcmp-ellipsis", "gl-strcmp-ellipsis");
-                            if (i == j && i == renderThreshold)
-                                return;
-                        }
-                        else if (i == lines1.length && j == lines2.length)
-                        {
-                            insertRow("", "EOF", "", "EOF", "gl-strcmp-eof", "gl-strcmp-eof");
-                        }
-                    }
-                    if (dp[i][j].src == null)
-                        return;
-                    if (dp[i][j].src.i == i - 1
-                        && dp[i][j].src.j == j - 1)
-                    {
-                        --renderDowncount;
-                        insertRow(" " + i.toString(), lines1[i - 1], " " + j.toString(), lines2[j - 1], "gl-strcmp-same", "gl-strcmp-same");
-                        --i;
-                        --j;
-                    }
-                    else if (dp[i][j].src.i == i - 1)
-                    {
-                        renderDowncount = renderThreshold;
-                        insertRow("-" + i.toString(), lines1[i - 1], "", "", "gl-strcmp-remove", "gl-strcmp-lack");
-                        --i;
-                    }
-                    else
-                    {
-                        renderDowncount = renderThreshold;
-                        insertRow("", "", "+" + j.toString(), lines2[j - 1], "gl-strcmp-lack", "gl-strcmp-insert");
-                        --j;
-                    }
-                }
-            }
-        </script>
+        <link rel="stylesheet" type="text/css" href="basic.css"/>
+        <link rel="stylesheet" type="text/css" href="colorful.css"/>
+        <link rel="stylesheet" type="text/css" href="index.css"/>
     </head>
     <body>
         <h1 style="margin-left: 40px;">strcmp</h1>
-        <div id="reset-button">
-            <a class="gl-reset-button" href="javascript:resetPickers();gotoState('pickers');">reset</a>
+        <div id="reset-button" class="gl-hidden">
+            <a class="gl-reset-button-left" href="javascript:resetPickers();gotoState('pickers');">reset</a>
         </div>
-        <div hidden="true">
+        <div class="gl-hidden">
             <input id="file1" type="file" onchange="pickerChanged();"/>
             <input id="file2" type="file" onchange="pickerChanged();"/>
         </div>
-        <div id="pickers-view" style="margin-left: 40px;">
+        <div id="pickers-view" style="margin-left: 40px;" class="gl-hidden">
             <table class="gl-picker-frame">
                 <tr>
-                    <th style="width: 50%;"><a class="gl-button" href="javascript:invokePicker('file1');">File 1...</a></th>
-                    <th style="width: 50%;"><a class="gl-button" href="javascript:invokePicker('file2');">File 2...</a></th>
+                    <th><a class="gl-button" href="javascript:invokePicker('file1');">File 1...</a></th>
+                </tr>
+                <tr style="height: 10px;"></tr>
+                <tr style="height: 30px;">
+                    <th id="file1-name"></th>
                 </tr>
                 <tr style="height: 20px;"></tr>
-                <tr style="min-height: 30px;">
-                    <td id="file1-name"></td>
-                    <td id="file2-name"></td>
+                <tr>
+                    <th><a class="gl-button" href="javascript:invokePicker('file2');">File 2...</a></th>
+                </tr>
+                <tr style="height: 10px;"></tr>
+                <tr style="height: 30px;">
+                    <th id="file2-name"></th>
                 </tr>
                 <tr style="height: 20px;"></tr>
-                <tr style="min-height: 50px;">
-                    <td colspan="2">
+                <tr style="height: 50px;">
+                    <td>
                         <div id="compare-button">
                             <a class="gl-compare-button" href="javascript:compareClick();">compare</a>
                         </div>
@@ -514,28 +47,82 @@
         <div id="busy-view" style="margin-left: 40px;">
             <p>Working...</p>
         </div>
-        <div id="result-view">
+        <div id="result-view" class="gl-hidden">
+            <a class="gl-reset-button-right" href="javascript:resetPickers();gotoState('pickers');">reset</a>
             <p id="result-strcmp-0">strcmp <strong>returns</strong> 0.</p>
-            <table id="result" style="width: 100%; min-width: 150px;">
-                <tr>
-                    <th class="gl-cell-border"></th>
-                    <th class="gl-cell-line-number"></th>
-                    <th class="gl-cell-border"></th>
-                    <th style="gl-cell-content" id="file1-name-header"></th>
-                    <th class="gl-cell-border"></th>
-                    <th class="gl-cell-line-number"></th>
-                    <th class="gl-cell-border"></th>
-                    <th style="gl-cell-content" id="file2-name-header"></th>
-                </tr>
-            </table>
+            <div id="result">
+                <a class="gl-print-button-wide" href="javascript:printResult('wide');">print</a>
+                <a class="gl-print-button-narrow" href="javascript:printResult('narrow');">print</a>
+                <table id="result-wide" class="gl-wide-result-table">
+                    <tbody>
+                        <tr>
+                            <th class="gl-cell-border"></th>
+                            <th class="gl-cell-line-number"></th>
+                            <th class="gl-cell-border"></th>
+                            <th style="gl-cell-content" id="file1-name-header"></th>
+                            <th class="gl-cell-border"></th>
+                            <th class="gl-cell-line-number"></th>
+                            <th class="gl-cell-border"></th>
+                            <th style="gl-cell-content" id="file2-name-header"></th>
+                            <th class="gl-cell-border"></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table id="result-narrow" class="gl-narrow-result-table">
+                    <tbody>
+                        <tr>
+                            <th class="gl-cell-border"></th>
+                            <th class="gl-cell-line-number"></th>
+                            <th class="gl-cell-border"></th>
+                            <th class="gl-cell-line-number"></th>
+                            <th class="gl-cell-border"></th>
+                            <th style="gl-cell-content" id="file-name-headers"></th>
+                            <th class="gl-cell-border"></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div style="margin-top: 50px; margin-left: 40px;">
-            <p>strcmp.cc by <a href="https://github.com/GeeLaw" target="_blank">Gee Law</a></p>
-            <p>Copyright &copy; 2014, all rights reserved</p>
+            <p>strcmp.cc by <a class="gl-link" id="email-me" href="javascript:email();" data-rsa="198594|39474|229147|115221|39474|39474|186930|30226|263859|112319|101653|101653">Gee Law</a></p>
+            <p>Copyright &copy; 2016, All Rights Reserved. Published under <span id="show-license-placeholder" class="gl-hidden">MIT License</span><a id="show-license" class="gl-link" href="javascript:showMitLicense();">MIT License</a>.</p>
+            <div id="mit-license" class="gl-hidden" style="font-family: Courier New, Courier, monospace; border-style: solid; border-width: 1px; border-color: black; margin-right: 40px; padding-left: 25px; padding-right: 25px;">
+                <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+                <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+                <p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+            </div>
         </div>
         <script>
-            gotoState("pickers");
-            pickerChanged();
+            var runningScripts = 3;
+            function reportScriptFinish()
+            {
+                --runningScripts;
+            }
+            
+            var pollFrequency = 200;
+            var pollMaxCount = 80;
+            var pollCount = 0;
+            var poller = function ()
+            {
+                if (pollCount++ < pollMaxCount && runningScripts != 0)
+                {
+                    window.setTimeout(poller, pollFrequency);
+                    return;
+                }
+                if (runningScripts != 0)
+                {
+                    window.alert("Some components of this page are not loaded. Please try again.");
+                }
+                else
+                {
+                    gotoState("pickers");
+                    pickerChanged();
+                }
+            };
+            window.setTimeout(poller, 0);
         </script>
+        <script type="text/javascript" src="shim.js"></script>
+        <script type="text/javascript" src="simple-rsa.js"></script>
+        <script type="text/javascript" src="index.js"></script>
     </body>
 </html>
