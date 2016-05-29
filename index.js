@@ -155,11 +155,19 @@ function doCompare(str1, str2)
     
     var result = document.getElementById("result");
     var resultStrcmp0 = document.getElementById("result-strcmp-0");
+    var resultTotDiff = document.getElementById("result-totally-different");
     result.className = "";
     resultStrcmp0.className = "gl-hidden";
+    resultTotDiff.className = "gl-hidden";
     if (lines1.length == lines2.length && dp[lines1.length][lines2.length].value == lines1.length)
     {
         resultStrcmp0.className = "";
+        result.className = "gl-hidden";
+        return;
+    }
+    if (lines1.length > 10 && lines2.length > 10 && dp[lines1.length][lines2.length].value / Math.min(lines1.length, lines2.length) < 0.25)
+    {
+        resultTotDiff.className = "";
         result.className = "gl-hidden";
         return;
     }
