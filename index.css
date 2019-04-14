@@ -12,8 +12,14 @@ table
 td
 {
     text-overflow: ellipsis;
-    white-space:nowrap;
-    overflow:hidden;
+    white-space: pre;
+    overflow: hidden;
+}
+#pickers-view td
+{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 body
 {
